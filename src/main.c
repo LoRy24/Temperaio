@@ -167,6 +167,9 @@ void logTermStats(float average, float minTemperature, float maxTemperature) {
     // Buffer
     char* buffer = malloc(1024);
 
+    // Separatore
+    logInfoMessage("+-------------------------------------------------------------+");
+
     // Temperatura media
     sprintf(buffer, "Temperatura media: %.3f °C", average);
     logInfoMessage(buffer);
@@ -178,6 +181,9 @@ void logTermStats(float average, float minTemperature, float maxTemperature) {
     // Temperatura massima
     sprintf(buffer, "Temperatura massima: %.3f °C", maxTemperature);
     logInfoMessage(buffer);
+
+    // Separatore
+    logInfoMessage("+-------------------------------------------------------------+");
 
     // Pulisci la memoria
     free(buffer);
@@ -299,7 +305,7 @@ float getDayMax(int day) {
 
 void launchDailyMeasureProcess() {
     for (currentMeasurement = 0; currentMeasurement < 48; ++currentMeasurement) {
-        sleep(measurationDelay);
+        usleep(measurationDelay);
 
         // Leggi la temperatura e notifica
         float temperature = measureTemperature();
@@ -311,6 +317,9 @@ void launchDailyMeasureProcess() {
         if (currentMeasurement == 23 || currentMeasurement == 47) {
             int termId = currentMeasurement / 24;
             saveMiddleTermStats(termId);
+
+            // Separatore
+            logInfoMessage("+-------------------------------------------------------------+");
 
             logInfoMessage("Completato un ciclo di 24 misure (12 ore)! Esiti:");
             logTermStats(getTermAverage(currentDay, termId), getTermMin(currentDay, termId), getTermMax(currentDay, termId));
@@ -342,6 +351,9 @@ int main(void) {
         logDebugMessage("Debug Mode abilitata!");
         measurationDelay = DEBUG_MEASUREMENT_DELAY_SECONDS;
     }
+
+    // Aggiorna unità delay
+    measurationDelay *= 100000;
 
     // Seed random
     srand(time(NULL));
